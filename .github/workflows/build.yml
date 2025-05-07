@@ -41,3 +41,8 @@ jobs:
         cd dist
         tar -czf ../ThunderHoster.tar.gz *
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ThunderHoster-artifact
+        path: ThunderHoster.tar.gz
