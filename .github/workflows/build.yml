@@ -36,13 +36,8 @@ jobs:
         cp LICENSE dist/
         cp README.md dist/
 
-    - name: Archive build
-      run: |
-        cd dist
-        tar -czf ../ThunderHoster.tar.gz *
-
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ThunderHoster-artifact
-        path: ThunderHoster.tar.gz
+        path: dist
