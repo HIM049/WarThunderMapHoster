@@ -1,14 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ .title }}</title>
+  <meta charset="UTF-8" />
+  <title>{{ .title }}</title>
 </head>
 <body>
+  <div class="window">
+    <h3>Upload File</h3>
     <form action="/admin/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".blk">
-        <input type="password" name="password" placeholder="Enter password">
-        <button type="submit">Submit</button>
+      <input type="file" name="file" accept=".blk" required />
+      <input type="password" name="password" placeholder="Enter password" required />
+      <button type="submit">Submit</button>
     </form>
+  </div>
 </body>
+
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f2f5;
+    }
+
+    .window {
+      width: 100%;
+      max-width: 360px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* 统一外观 */
+    input[type="file"],
+    input[type="password"],
+    button[type="submit"] {
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    /* 对齐文字 */
+    input[type="file"] {
+      padding: 6px 14px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #409eff;
+      box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+    }
+
+    button[type="submit"] {
+      cursor: pointer;
+      background-color: #409eff;
+      color: #fff;
+      border: none;
+    }
+    button[type="submit"]:hover {
+      background-color: #66b1ff;
+    }
+  </style>
 </html>
