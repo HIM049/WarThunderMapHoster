@@ -1,0 +1,43 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: ThunderHosterBuild
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23'
+
+    - name: Download Go modules
+      run: go mod download
+
+    - name: Build
+      run: |
+        mkdir dist
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o dist/ThunderHoster ./
+          
+    - name: Copy resource files
+      run: |
+        cp -r templates dist/
+        cp config.toml dist/
+        cp LICENSE dist/
+        cp README.md dist/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ThunderHoster-artifact
+        path: dist
