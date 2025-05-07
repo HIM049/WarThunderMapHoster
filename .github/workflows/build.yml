@@ -27,7 +27,7 @@ jobs:
     - name: Build
       run: |
         mkdir dist
-        go build -o dist/ThunderHoster ./
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o dist/ThunderHoster ./
           
     - name: Copy resource files
       run: |
