@@ -50,8 +50,8 @@ func InitConfig() {
 
 	security := Security{
 		RetryCount:  viper.GetInt("security.retrycount"),
-		Password:    viper.GetString("service.password"),
-		AdminPasswd: viper.GetString("service.adminpassword"),
+		Password:    viper.GetString("security.password"),
+		AdminPasswd: viper.GetString("security.adminpassword"),
 	}
 
 	Cfg = Config{
