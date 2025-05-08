@@ -17,10 +17,15 @@ func PasswordAuthenticator(ctx *gin.Context) {
 	if passwd == config.Cfg.Security.Password {
 		public.ValidTime = time.Now().Add(time.Duration(config.Cfg.Service.ValidMin) * time.Minute)
 		public.FailedCounter.Delete(ip)
+
+		hostaddress := ctx.Request.Host
+		if config.Cfg.Customize.HostAddress != "" {
+			hostaddress = config.Cfg.Customize.HostAddress
+		}
 		ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
 			"title":       "Verification Successed",
 			"message":     "Verification Successed",
-			"description": fmt.Sprintf("Now you can visit %s/map , before %s", ctx.Request.Host, public.ValidTime.Format("2006-01-02 15:04:05")),
+			"description": fmt.Sprintf("Now you can visit %s/map , before %s", hostaddress, public.ValidTime.Format("2006-01-02 15:04:05")),
 			"color":       "green",
 		})
 	} else {
