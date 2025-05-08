@@ -15,7 +15,7 @@ func RouterSetup() *gin.Engine {
 	router.Use(middleware.FailedCountLimiter())
 
 	router.GET("/", handler.MainPage)
-	router.POST("/auth", handler.PasswordAuthenticator)
+	router.POST("/", handler.PasswordAuthenticator)
 
 	mapGroup := router.Group("/map")
 	mapGroup.Use(middleware.AccessControlMiddleware())
