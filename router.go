@@ -11,6 +11,7 @@ func RouterSetup() *gin.Engine {
 
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
+	router.Static("/resources", "./resources")
 
 	router.Use(middleware.FailedCountLimiter())
 

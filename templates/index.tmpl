@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>{{ .title }}</title>
+  <link rel="shortcut icon" href="/resources/icon.ico" />
 </head>
 <body>
   <div class="window">
@@ -23,6 +24,10 @@
       align-items: center;
       justify-content: center;
       background-color: #f0f2f5;
+      background-image: url("/resources/bg.png");
+      background-repeat: no-repeat;      /* 不重复 */
+      background-position: center center;/* 居中 */
+      background-size: cover;   
     }
 
     .window {
