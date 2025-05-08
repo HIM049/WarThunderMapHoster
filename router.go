@@ -12,6 +12,8 @@ func RouterSetup() *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 
+	router.Use(middleware.FailedCountLimiter())
+
 	router.GET("/", handler.MainPage)
 	router.POST("/auth", handler.PasswordAuthenticator)
 

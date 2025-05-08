@@ -4,25 +4,26 @@ import (
 	"fmt"
 	"net/http"
 	"thunder_hoster/config"
+	"thunder_hoster/public"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-var ValidTime time.Time
-
 func PasswordAuthenticator(ctx *gin.Context) {
+	ip := ctx.ClientIP()
 	passwd := ctx.PostForm("password")
 
 	if passwd == config.Cfg.Password {
-		ValidTime = time.Now().Add(time.Duration(config.Cfg.ValidMin) * time.Minute)
+		public.ValidTime = time.Now().Add(time.Duration(config.Cfg.ValidMin) * time.Minute)
 		ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
 			"title":       "Verification Successed",
 			"message":     "Verification Successed",
-			"description": fmt.Sprintf("Now you can visit %s/map , before %s", ctx.Request.Host, ValidTime.Format("2006-01-02 15:04:05")),
+			"description": fmt.Sprintf("Now you can visit %s/map , before %s", ctx.Request.Host, public.ValidTime.Format("2006-01-02 15:04:05")),
 			"color":       "green",
 		})
 	} else {
+		public.FailedCounter.Add(ip)
 		ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
 			"title":       "Verification Failed",
 			"message":     "Verification Failed",

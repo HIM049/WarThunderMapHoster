@@ -15,10 +15,15 @@ type Config struct {
 	AdminPasswd string
 	ValidMin    int
 	Customize
+	Security
 }
 
 type Customize struct {
 	SideName string
+}
+
+type Security struct {
+	RetryCount int
 }
 
 func InitConfig() {
@@ -34,6 +39,10 @@ func InitConfig() {
 		SideName: viper.GetString("customize.sidename"),
 	}
 
+	security := Security{
+		RetryCount: viper.GetInt("security.retrycount"),
+	}
+
 	Cfg = Config{
 		Port:        viper.GetInt("server.port"),
 		FilePath:    viper.GetString("service.filepath"),
@@ -41,5 +50,6 @@ func InitConfig() {
 		AdminPasswd: viper.GetString("service.adminpassword"),
 		ValidMin:    viper.GetInt("service.validmin"),
 		Customize:   customize,
+		Security:    security,
 	}
 }
