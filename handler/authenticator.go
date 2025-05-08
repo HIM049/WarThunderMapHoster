@@ -14,8 +14,8 @@ func PasswordAuthenticator(ctx *gin.Context) {
 	ip := ctx.ClientIP()
 	passwd := ctx.PostForm("password")
 
-	if passwd == config.Cfg.Password {
-		public.ValidTime = time.Now().Add(time.Duration(config.Cfg.ValidMin) * time.Minute)
+	if passwd == config.Cfg.Security.Password {
+		public.ValidTime = time.Now().Add(time.Duration(config.Cfg.Service.ValidMin) * time.Minute)
 		public.FailedCounter.Delete(ip)
 		ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
 			"title":       "Verification Successed",

@@ -11,7 +11,7 @@ import (
 
 func SendFile(ctx *gin.Context) {
 
-	file, err := os.Open(config.Cfg.FilePath)
+	file, err := os.Open(config.Cfg.Service.FilePath)
 	if err != nil {
 		panic(err)
 	}
@@ -25,5 +25,5 @@ func SendFile(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "must-revalidate")
 	ctx.Header("Pragma", "public")
 	ctx.Header("Content-Length", strconv.Itoa(int(fileInfo.Size())))
-	ctx.File(config.Cfg.FilePath)
+	ctx.File(config.Cfg.Service.FilePath)
 }

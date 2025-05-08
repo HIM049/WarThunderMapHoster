@@ -3,8 +3,6 @@ port = 8080
 
 [service]
 filepath = "./Chillfactory.blk"
-password = "123123"
-adminpassword = "qweqwe"
 validmin = 5
 
 [customize]
@@ -12,3 +10,5 @@ sidename = "Welcome"
 
 [security]
 retrycount = 5
+password = "123123"
+adminpassword = "qweqwe"

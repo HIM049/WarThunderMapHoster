@@ -9,13 +9,15 @@ import (
 var Cfg Config
 
 type Config struct {
-	Port        int
-	FilePath    string
-	Password    string
-	AdminPasswd string
-	ValidMin    int
+	Port int
+	Service
 	Customize
 	Security
+}
+
+type Service struct {
+	FilePath string
+	ValidMin int
 }
 
 type Customize struct {
@@ -23,7 +25,9 @@ type Customize struct {
 }
 
 type Security struct {
-	RetryCount int
+	RetryCount  int
+	Password    string
+	AdminPasswd string
 }
 
 func InitConfig() {
@@ -35,21 +39,25 @@ func InitConfig() {
 		log.Fatalf("Failed to read config file: %v", err)
 	}
 
+	service := Service{
+		FilePath: viper.GetString("service.filepath"),
+		ValidMin: viper.GetInt("service.validmin"),
+	}
+
 	customize := Customize{
 		SideName: viper.GetString("customize.sidename"),
 	}
 
 	security := Security{
-		RetryCount: viper.GetInt("security.retrycount"),
+		RetryCount:  viper.GetInt("security.retrycount"),
+		Password:    viper.GetString("service.password"),
+		AdminPasswd: viper.GetString("service.adminpassword"),
 	}
 
 	Cfg = Config{
-		Port:        viper.GetInt("server.port"),
-		FilePath:    viper.GetString("service.filepath"),
-		Password:    viper.GetString("service.password"),
-		AdminPasswd: viper.GetString("service.adminpassword"),
-		ValidMin:    viper.GetInt("service.validmin"),
-		Customize:   customize,
-		Security:    security,
+		Port:      viper.GetInt("server.port"),
+		Service:   service,
+		Customize: customize,
+		Security:  security,
 	}
 }
