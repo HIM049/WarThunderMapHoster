@@ -12,6 +12,10 @@ import (
 // 访问控制
 func AccessControlMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		if !config.Cfg.AuthUA || ctx.Request.UserAgent() != "dagor2" {
+			ctx.AbortWithStatus(http.StatusNotFound)
+		}
+
 		if public.ValidTime.Before(time.Now()) {
 			// 已经超时
 			ctx.AbortWithStatus(http.StatusServiceUnavailable)
