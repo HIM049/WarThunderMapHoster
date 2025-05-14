@@ -29,6 +29,7 @@ type Security struct {
 	RetryCount  int
 	Password    string
 	AdminPasswd string
+	AuthUA      bool
 }
 
 func InitConfig() {
@@ -54,6 +55,7 @@ func InitConfig() {
 		RetryCount:  viper.GetInt("security.retrycount"),
 		Password:    viper.GetString("security.password"),
 		AdminPasswd: viper.GetString("security.adminpassword"),
+		AuthUA:      viper.GetBool("security.authua"),
 	}
 
 	Cfg = Config{

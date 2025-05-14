@@ -13,3 +13,4 @@ hostaddress = ""
 retrycount = 5
 password = "123123"
 adminpassword = "qweqwe"
+authua = true
