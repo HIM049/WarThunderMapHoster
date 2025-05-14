@@ -12,7 +12,7 @@ import (
 // 访问控制
 func AccessControlMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !config.Cfg.AuthUA || ctx.Request.UserAgent() != "dagor2" {
+		if config.Cfg.AuthUA && ctx.Request.UserAgent() != "dagor2" {
 			ctx.AbortWithStatus(http.StatusNotFound)
 		}
 
