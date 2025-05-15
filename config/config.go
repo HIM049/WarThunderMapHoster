@@ -21,8 +21,9 @@ type Service struct {
 }
 
 type Customize struct {
-	SideName    string
-	HostAddress string
+	SideName       string
+	HostAddress    string
+	DownloadRouter string
 }
 
 type Security struct {
@@ -47,8 +48,9 @@ func InitConfig() {
 	}
 
 	customize := Customize{
-		SideName:    viper.GetString("customize.sidename"),
-		HostAddress: viper.GetString("customize.hostaddress"),
+		SideName:       viper.GetString("customize.sidename"),
+		HostAddress:    viper.GetString("customize.hostaddress"),
+		DownloadRouter: viper.GetString("customize.downloadrouter"),
 	}
 
 	security := Security{

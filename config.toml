@@ -8,6 +8,7 @@ validmin = 5
 [customize]
 sidename = "Welcome"
 hostaddress = ""
+downloadrouter = "/map"
 
 [security]
 retrycount = 5

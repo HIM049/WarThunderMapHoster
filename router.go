@@ -1,6 +1,7 @@
 package main
 
 import (
+	"thunder_hoster/config"
 	"thunder_hoster/handler"
 	"thunder_hoster/middleware"
 
@@ -17,7 +18,7 @@ func RouterSetup() *gin.Engine {
 	router.GET("/", handler.MainPage)
 	router.POST("/", handler.PasswordAuthenticator)
 
-	mapGroup := router.Group("/map")
+	mapGroup := router.Group(config.Cfg.DownloadRouter)
 	mapGroup.Use(middleware.AccessControlMiddleware())
 	{
 		mapGroup.GET("/*path", handler.SendFile)
