@@ -17,6 +17,7 @@ type Config struct {
 
 type Service struct {
 	FilePath string
+	MapPath  string
 	ValidMin int
 }
 
@@ -44,6 +45,7 @@ func InitConfig() {
 
 	service := Service{
 		FilePath: viper.GetString("service.filepath"),
+		MapPath:  viper.GetString("service.mappath"),
 		ValidMin: viper.GetInt("service.validmin"),
 	}
 
