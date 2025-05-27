@@ -17,7 +17,6 @@ type Config struct {
 
 type Service struct {
 	FilePath string
-	MapPath  string
 	ValidMin int
 }
 
@@ -44,26 +43,25 @@ func InitConfig() {
 	}
 
 	service := Service{
-		FilePath: viper.GetString("service.filepath"),
-		MapPath:  viper.GetString("service.mappath"),
-		ValidMin: viper.GetInt("service.validmin"),
+		FilePath: viper.GetString("service.FilePath"),
+		ValidMin: viper.GetInt("service.ValidMin"),
 	}
 
 	customize := Customize{
-		SideName:       viper.GetString("customize.sidename"),
-		HostAddress:    viper.GetString("customize.hostaddress"),
-		DownloadRouter: viper.GetString("customize.downloadrouter"),
+		SideName:       viper.GetString("customize.SideName"),
+		HostAddress:    viper.GetString("customize.HostAddress"),
+		DownloadRouter: viper.GetString("customize.DownloadRouter"),
 	}
 
 	security := Security{
-		RetryCount:  viper.GetInt("security.retrycount"),
-		Password:    viper.GetString("security.password"),
-		AdminPasswd: viper.GetString("security.adminpassword"),
-		AuthUA:      viper.GetBool("security.authua"),
+		RetryCount:  viper.GetInt("security.RetryCount"),
+		Password:    viper.GetString("security.Password"),
+		AdminPasswd: viper.GetString("security.AdminPassword"),
+		AuthUA:      viper.GetBool("security.AuthUA"),
 	}
 
 	Cfg = Config{
-		Port:      viper.GetInt("server.port"),
+		Port:      viper.GetInt("server.Port"),
 		Service:   service,
 		Customize: customize,
 		Security:  security,
