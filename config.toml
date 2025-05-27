@@ -1,17 +1,17 @@
 [server]
-port = 8080
+Port = 8080
 
 [service]
-filepath = "./Chillfactory.blk"
-validmin = 5
+FilePath = "./Chillfactory.blk"
+ValidMin = 5
 
 [customize]
-sidename = "Welcome"
-hostaddress = ""
-downloadrouter = "/map"
+SideName = "Welcome"
+HostAddress = ""
+DownloadRouter = "/map"
 
 [security]
-retrycount = 5
-password = "123123"
-adminpassword = "qweqwe"
-authua = true
+RetryCount = 5
+Password = "123123"
+AdminPassword = "qweqwe"
+AuthUA = true
