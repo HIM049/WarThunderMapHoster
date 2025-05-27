@@ -21,8 +21,9 @@ func RouterSetup() *gin.Engine {
 	mapGroup := router.Group(config.Cfg.DownloadRouter)
 	mapGroup.Use(middleware.AccessControlMiddleware())
 	{
-		mapGroup.GET("/*path", handler.SendFile)
-		mapGroup.POST("/*path", handler.SendFile)
+		router.GET("/list", handler.MapList)
+		mapGroup.GET("/:map", handler.SendFile)
+		mapGroup.POST("/:map", handler.SendFile)
 	}
 
 	adminGroup := router.Group("/admin")

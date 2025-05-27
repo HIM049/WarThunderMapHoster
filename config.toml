@@ -2,7 +2,7 @@
 Port = 8080
 
 [service]
-FilePath = "./Chillfactory.blk"
+MapDir = "./maps"
 ValidMin = 5
 
 [customize]

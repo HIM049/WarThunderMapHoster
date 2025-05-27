@@ -2,7 +2,10 @@ package handler
 
 import (
 	"net/http"
+	"path/filepath"
 	"thunder_hoster/config"
+	"thunder_hoster/storage"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +17,7 @@ func UploadPage(ctx *gin.Context) {
 }
 
 func UploadHandler(ctx *gin.Context) {
+	mapName := ctx.PostForm("name")
 	passwd := ctx.PostForm("password")
 
 	if passwd != config.Cfg.Security.AdminPasswd {
@@ -38,20 +42,40 @@ func UploadHandler(ctx *gin.Context) {
 		return
 	}
 
-	err = ctx.SaveUploadedFile(file, config.Cfg.Service.FilePath)
+	mapPath := filepath.Join(config.Cfg.Service.MapDir, file.Filename)
+	err = ctx.SaveUploadedFile(file, mapPath)
 	if err != nil {
 		ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
 			"title":       "Upload Failed",
-			"message":     "Failed when save file",
+			"message":     "Failed to save file",
 			"description": "Error: " + err.Error(),
 			"color":       "red",
 		})
 		return
 	}
 
+	newMap := storage.MapInformation{
+		MapName:    mapName,
+		FilePath:   mapPath,
+		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+	}
+	storage.Storage.Maps = append(storage.Storage.Maps, newMap)
+	err = storage.Storage.SaveToFile()
+	if err != nil {
+		ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
+			"title":       "Upload Failed",
+			"message":     "Failed to save storage file",
+			"description": "Error: " + err.Error(),
+			"color":       "red",
+		})
+		return
+	}
+
+	storage.Storage.GenerateIndex()
+
 	ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
-		"title":       "Upload Successed",
-		"message":     "Upload Successed",
+		"title":       "Upload Successfully",
+		"message":     "Upload Successfully",
 		"description": "",
 		"color":       "green",
 	})

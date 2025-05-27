@@ -9,6 +9,7 @@
     <h3>Upload File</h3>
     <form action="/admin/upload" method="POST" enctype="multipart/form-data">
       <input type="file" name="file" accept=".blk" required />
+      <input name="name" placeholder="Enter map name" required />
       <input type="password" name="password" placeholder="Enter password" required />
       <button type="submit">Submit</button>
     </form>
@@ -42,8 +43,7 @@
     }
 
     /* 统一外观 */
-    input[type="file"],
-    input[type="password"],
+    input,
     button[type="submit"] {
       padding: 10px 14px;
       font-size: 1rem;
