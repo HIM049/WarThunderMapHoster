@@ -14,4 +14,4 @@ DownloadRouter = "/map"
 RetryCount = 5
 Password = "123123"
 AdminPassword = "qweqwe"
-AuthUA = true
+AuthUA = false

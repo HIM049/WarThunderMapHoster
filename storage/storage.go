@@ -12,7 +12,7 @@ import (
 
 type MapStorage struct {
 	Maps            []MapInformation
-	ListMap         map[string]MapInformation
+	ListMap         map[string]*MapInformation
 	StorageFilePath string
 }
 
@@ -33,7 +33,7 @@ func InitStorage() {
 		log.Fatalf("Failed to create map directory: %v", err)
 	}
 
-	Storage.ListMap = make(map[string]MapInformation)
+	Storage.ListMap = make(map[string]*MapInformation)
 	Storage.StorageFilePath = filepath.Join(config.Cfg.MapDir, STORAGE_FILE_NAME)
 
 	err = RefreshStorage()
@@ -107,6 +107,6 @@ func (m *MapStorage) GenerateIndex() {
 	}
 
 	for _, mapInfo := range m.Maps {
-		m.ListMap[mapInfo.MapName] = mapInfo
+		m.ListMap[mapInfo.MapName] = &mapInfo
 	}
 }
