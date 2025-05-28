@@ -28,8 +28,9 @@ func RouterSetup() *gin.Engine {
 
 	adminGroup := router.Group("/admin")
 	{
-		adminGroup.GET("/upload", handler.UploadPage)
+		adminGroup.GET("/", handler.UploadPage)
 		adminGroup.POST("/upload", handler.UploadHandler)
+		adminGroup.POST("remove", handler.RemoveMap)
 	}
 
 	return router
