@@ -43,7 +43,7 @@ func UploadHandler(ctx *gin.Context) {
 		return
 	}
 
-	mapPath := filepath.Join(config.Cfg.Service.MapDir, file.Filename)
+	mapPath := filepath.Join(config.Cfg.Service.MapDir, mapName+".blk")
 	err = ctx.SaveUploadedFile(file, mapPath)
 	if err != nil {
 		ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{

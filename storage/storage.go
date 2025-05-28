@@ -62,9 +62,14 @@ func (m *MapStorage) Add(newMap *MapInformation) error {
 func (m *MapStorage) Remove(name string) error {
 	for i, amap := range m.Maps {
 		if amap.MapName == name {
-			continue
+			err := os.Remove(amap.FilePath)
+			if err != nil {
+				return err
+			}
+
+			m.Maps = append(m.Maps[:i], m.Maps[i+1:]...)
+			break
 		}
-		m.Maps = append(m.Maps[:i], m.Maps[i+1:]...)
 	}
 
 	return nil
