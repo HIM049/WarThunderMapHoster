@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 	"github.com/goccy/go-json"
 	"io"
@@ -9,6 +10,8 @@ import (
 	"path/filepath"
 	"thunder_hoster/config"
 )
+
+var ErrDuplicatedName = errors.New("duplicated name")
 
 type MapStorage struct {
 	Maps            []MapInformation
@@ -40,6 +43,31 @@ func InitStorage() {
 	if err != nil {
 		log.Fatalf("Failed to refresh storage: %v", err)
 	}
+}
+
+func (m *MapStorage) Add(newMap *MapInformation) error {
+	if _, found := m.ListMap[newMap.MapName]; found {
+		return ErrDuplicatedName
+	}
+	m.Maps = append(m.Maps, *newMap)
+
+	err := m.SaveToFile()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *MapStorage) Remove(name string) error {
+	for i, amap := range m.Maps {
+		if amap.MapName == name {
+			continue
+		}
+		m.Maps = append(m.Maps[:i], m.Maps[i+1:]...)
+	}
+
+	return nil
 }
 
 // RefreshStorage 刷新存储

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"path/filepath"
 	"thunder_hoster/config"
@@ -59,15 +60,23 @@ func UploadHandler(ctx *gin.Context) {
 		FilePath:   mapPath,
 		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
 	}
-	storage.Storage.Maps = append(storage.Storage.Maps, newMap)
-	err = storage.Storage.SaveToFile()
+	err = storage.Storage.Add(&newMap)
 	if err != nil {
-		ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
-			"title":       "Upload Failed",
-			"message":     "Failed to save storage file",
-			"description": "Error: " + err.Error(),
-			"color":       "red",
-		})
+		if errors.Is(err, storage.ErrDuplicatedName) {
+			ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
+				"title":       "Upload Failed",
+				"message":     "Map name already exists",
+				"description": "Error: " + err.Error(),
+				"color":       "red",
+			})
+		} else {
+			ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
+				"title":       "Upload Failed",
+				"message":     "Failed to save storage file",
+				"description": "Error: " + err.Error(),
+				"color":       "red",
+			})
+		}
 		return
 	}
 
