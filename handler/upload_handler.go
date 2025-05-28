@@ -11,12 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UploadPage(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "upload.tmpl", gin.H{
-		"title": "File Uploader",
-	})
-}
-
 func UploadHandler(ctx *gin.Context) {
 	mapName := ctx.PostForm("name")
 	passwd := ctx.PostForm("password")
