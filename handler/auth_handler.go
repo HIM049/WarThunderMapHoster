@@ -6,6 +6,7 @@ import (
 	"thunder_hoster/config"
 	"thunder_hoster/public"
 	"thunder_hoster/services"
+	"time"
 )
 
 func AuthHandler(ctx *gin.Context) {
@@ -15,11 +16,9 @@ func AuthHandler(ctx *gin.Context) {
 	var userGroup string
 	if passwd == config.Cfg.Security.Password {
 		// 用户密码验证成功
-		public.FailedCounter.Delete(ip)
 		userGroup = services.GROUP_USER
 	} else if passwd == config.Cfg.Security.AdminPasswd {
 		// 管理员密码验证成功
-		public.FailedCounter.Delete(ip)
 		userGroup = services.GROUP_ADMIN
 	} else {
 		// 验证失败
@@ -27,6 +26,9 @@ func AuthHandler(ctx *gin.Context) {
 		ctx.Redirect(http.StatusFound, "/login?error=1")
 		return
 	}
+
+	public.FailedCounter.Delete(ip)
+	public.ValidTime = time.Now().Add(time.Duration(config.Cfg.Service.ValidMin) * time.Minute)
 
 	jwtToken, err := services.GenerateJWT(userGroup)
 	if err != nil {

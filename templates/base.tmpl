@@ -23,9 +23,12 @@
             align-items: center;
             height: 60px;
         }
-        .site-title {
+        .site-title,
+        .site-title a{
             font-size: 20px;
             font-weight: bold;
+            text-decoration: none;
+            color: black;
         }
         .nav-buttons a {
             margin-left: 20px;
@@ -49,10 +52,12 @@
 <body>
     <header>
         <div class="container navbar">
-            <div class="site-title">网站名称</div>
+            <div class="site-title">
+                <a href="/">SiteName</a>
+            </div>
             <div class="nav-buttons">
-                <a href="/about">关于</a>
-                <a href="/contact">联系</a>
+                <a href="/login">Login</a>
+                <a href="/pages/list">Map List</a>
             </div>
         </div>
     </header>
@@ -63,7 +68,7 @@
 
     <footer>
         <div class="container">
-            <p>版权信息 © 2025</p>
+            <p>Copyright © 2025</p>
         </div>
     </footer>
 </body>
