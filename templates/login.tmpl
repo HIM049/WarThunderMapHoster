@@ -1,0 +1,83 @@
+{{ define "title" }}Login{{ end }}
+
+{{ define "content" }}
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60vh;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 400px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .login-box h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .login-box form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-box input[type="password"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .login-box button {
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        background-color: #333;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .login-box button:hover {
+        background-color: #555;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-box">
+        <h2>Login</h2>
+        <form method="POST" action="/api/login">
+            <input type="password" name="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+            <p id="error-msg" style="display: none; color: red; text-align: center;">Incorrect password</p>
+        </form>
+    </div>
+</div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get("error");
+        if (error) {
+            const msg = document.getElementById("error-msg");
+            if (msg) {
+                msg.style.display = "block";
+                msg.textContent = "Incorrect password. Please try again.";
+            }
+        }
+    });
+</script>
+{{ end }}
+
+{{ template "base" . }}

@@ -1,0 +1,162 @@
+{{ define "title" }}Map List{{ end }}
+
+{{ define "content" }}
+<h2>Map List</h2>
+
+<!-- 告警区域（隐藏） -->
+<div id="alarm" style="
+    display: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+"></div>
+
+<!-- 添加表单（隐藏） -->
+<div id="add-form" style="display: none; margin-bottom: 20px;">
+    <form method="POST" action="/api/upload" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Map name" required
+               style="padding: 6px; margin-right: 8px;"/>
+        <input type="file" name="file" accept=".blk" required
+               style="padding: 6px; margin-right: 8px;"/>
+        <button type="submit" style="
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        ">Add</button>
+    </form>
+</div>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    .action-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-right: 6px;
+    }
+    .action-btn:hover {
+        background-color: #e0e0e0;
+    }
+    .copy-btn {}
+    .delete-btn {}
+</style>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Path</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range .maplist }}
+    <tr>
+        <td class="mapname">{{ .MapName }}</td>
+        <td class="filepath">{{ .FilePath }}</td>
+        <td>{{ .UpdateTime }}</td>
+        <td>
+            <button class="action-btn copy-btn" onclick="copyToClipboard(this)">
+                Copy
+            </button>
+            <button class="action-btn delete-btn" onclick="deleteMap(this)" style="display: none;">
+                Delete
+            </button>
+        </td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const params = new URLSearchParams(window.location.search);
+        const isAdmin = params.get("admin") === "1";
+        const errorMsg = params.get("error");
+        const successMsg = params.get("success");
+
+        const alarm = document.getElementById("alarm");
+        if (errorMsg) {
+            // 红色告警
+            alarm.textContent = decodeURIComponent(errorMsg);
+            alarm.style.backgroundColor = "#ffe6e6";
+            alarm.style.border = "1px solid #ff4d4d";
+            alarm.style.color = "#a70000";
+            alarm.style.display = "block";
+        } else if (successMsg) {
+            // 绿色提示
+            alarm.textContent = decodeURIComponent(successMsg);
+            alarm.style.backgroundColor = "#e6ffea";
+            alarm.style.border = "1px solid #4CAF50";
+            alarm.style.color = "#2e7d32";
+            alarm.style.display = "block";
+        }
+
+        if (isAdmin) {
+            // 显示添加表单
+            document.getElementById("add-form").style.display = "block";
+            // 显示 delete 按钮
+            document.querySelectorAll(".delete-btn").forEach(btn => {
+                btn.style.display = "inline-block";
+            });
+        }
+    });
+
+    // 复制功能
+    function copyToClipboard(button) {
+        const row = button.closest('tr');
+        const downloadRoute =  window.location.origin + "{{ .downloadRoute }}/" +  row.querySelector('.mapname').textContent.trim()
+        navigator.clipboard.writeText(downloadRoute).then(() => {
+            const original = button.textContent;
+            button.textContent = 'Copied';
+            setTimeout(() => button.textContent = original, 1500);
+        });
+    }
+
+    // 删除功能
+    function deleteMap(button) {
+        const row = button.closest('tr');
+        const mapName = row.querySelector('.mapname').textContent.trim();
+
+        if (!confirm(`Are you sure you want to delete "${mapName}"?`)) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', mapName);
+
+        fetch('/api/delete', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    row.remove();
+                } else {
+                    alert('Delete failed.');
+                }
+            })
+            .catch(() => {
+                alert('Request failed.');
+            });
+    }
+</script>
+{{ end }}
+
+{{ template "base" . }}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/multitemplate"
 	"thunder_hoster/config"
 	"thunder_hoster/handler"
 	"thunder_hoster/middleware"
@@ -9,29 +10,44 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func NewTemplateRender() multitemplate.Renderer {
+	r := multitemplate.New()
+	r.AddFromFiles("index", "templates/index.tmpl", "templates/base.tmpl")
+	r.AddFromFiles("login", "templates/login.tmpl", "templates/base.tmpl")
+	r.AddFromFiles("list", "templates/list.tmpl", "templates/base.tmpl")
+	return r
+}
+
 func RouterSetup() *gin.Engine {
 
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
+	router.HTMLRender = NewTemplateRender()
 
 	router.Use(middleware.FailedCountLimiter())
 
 	router.GET("/", pages.PageMain)
-	router.POST("/", handler.PasswordAuthenticator)
 
-	mapGroup := router.Group(config.Cfg.DownloadRouter)
-	mapGroup.Use(middleware.AccessControlMiddleware())
+	router.GET("/login", pages.PageLogin)
+
+	pageGroup := router.Group("/pages")
+	pageGroup.Use(middleware.LoginCheckMiddleware())
 	{
-		router.GET("/list", pages.PageMapList)
+		pageGroup.GET("/list", pages.PageMapList)
+	}
+
+	// 文件下载路由
+	mapGroup := router.Group(config.Cfg.DownloadRouter)
+	mapGroup.Use(middleware.DownloadControlMiddleware())
+	{
 		mapGroup.GET("/:map", handler.SendFile)
 		mapGroup.POST("/:map", handler.SendFile)
 	}
 
-	adminGroup := router.Group("/admin")
+	apiGroup := router.Group("/api")
 	{
-		adminGroup.GET("/", pages.UploadPage)
-		adminGroup.POST("/upload", handler.UploadHandler)
-		adminGroup.POST("remove", handler.RemoveMap)
+		apiGroup.POST("/login", handler.AuthHandler)
+		apiGroup.POST("/upload", handler.UploadHandler)
+		apiGroup.POST("/delete", handler.DeleteHandler)
 	}
 
 	return router
