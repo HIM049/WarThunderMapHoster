@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
+	"log"
 	"thunder_hoster/config"
 	"time"
 )
@@ -12,7 +13,9 @@ const GROUP_USER = "user"
 const GROUP_ADMIN = "admin"
 
 func InitKeys() {
-	// TODO
+	if config.Cfg.Secret.SecretKey == "" {
+		log.Fatalln("You should fill the secret key")
+	}
 }
 
 // GenerateJWT 生成 JWT 令牌
