@@ -72,6 +72,11 @@ func (m *MapStorage) Remove(name string) error {
 		}
 	}
 
+	err := m.SaveToFile()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
