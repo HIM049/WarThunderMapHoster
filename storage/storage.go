@@ -31,7 +31,7 @@ var Storage MapStorage
 
 // InitStorage 初始化存储
 func InitStorage() {
-	err := os.MkdirAll(config.Cfg.MapDir, os.ModeDir)
+	err := os.MkdirAll(config.Cfg.MapDir, 0755)
 	if err != nil {
 		log.Fatalf("Failed to create map directory: %v", err)
 	}
@@ -105,7 +105,7 @@ func (m *MapStorage) SaveToFile() error {
 func (m *MapStorage) ReadFromFile() error {
 	var storageMaps []MapInformation
 	// 打开文件
-	storageFile, err := os.OpenFile(m.StorageFilePath, os.O_RDONLY|os.O_CREATE, 0666)
+	storageFile, err := os.OpenFile(m.StorageFilePath, os.O_RDONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
