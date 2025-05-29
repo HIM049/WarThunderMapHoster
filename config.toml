@@ -1,5 +1,6 @@
 [server]
 Port = 8080
+Https = false
 
 [service]
 MapDir = "./maps"
@@ -15,3 +16,6 @@ RetryCount = 5
 Password = "123123"
 AdminPassword = "qweqwe"
 AuthUA = false
+
+[secret]
+SecretKey = ""

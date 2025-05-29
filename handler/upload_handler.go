@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"thunder_hoster/config"
+	"thunder_hoster/services"
 	"thunder_hoster/storage"
 	"time"
 
@@ -12,19 +13,19 @@ import (
 )
 
 func UploadHandler(ctx *gin.Context) {
-	mapName := ctx.PostForm("name")
-	passwd := ctx.PostForm("password")
-
-	if passwd != config.Cfg.Security.AdminPasswd {
-
-		ctx.HTML(http.StatusForbidden, "message.tmpl", gin.H{
-			"title":       "Wrong Password",
-			"message":     "Wrong Password",
-			"description": "",
-			"color":       "red",
-		})
+	group, exists := ctx.Get("group")
+	if !exists {
+		// 没有找到用户权限组标记
+		ctx.Redirect(http.StatusFound, "/login")
 		return
 	}
+
+	if group != services.GROUP_ADMIN {
+		// 不是管理员用户
+		ctx.Redirect(http.StatusFound, "/pages/list")
+		return
+	}
+	mapName := ctx.PostForm("name")
 
 	file, err := ctx.FormFile("file")
 	if err != nil {

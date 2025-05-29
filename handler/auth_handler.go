@@ -1,41 +1,52 @@
 package handler
 
 import (
-	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"thunder_hoster/config"
 	"thunder_hoster/public"
-	"time"
-
-	"github.com/gin-gonic/gin"
+	"thunder_hoster/services"
 )
 
-func PasswordAuthenticator(ctx *gin.Context) {
+func AuthHandler(ctx *gin.Context) {
 	ip := ctx.ClientIP()
 	passwd := ctx.PostForm("password")
 
+	var userGroup string
 	if passwd == config.Cfg.Security.Password {
-		public.ValidTime = time.Now().Add(time.Duration(config.Cfg.Service.ValidMin) * time.Minute)
+		// 用户密码验证成功
 		public.FailedCounter.Delete(ip)
-
-		hostaddress := ctx.Request.Host
-		if config.Cfg.Customize.HostAddress != "" {
-			hostaddress = config.Cfg.Customize.HostAddress
-		}
-		ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
-			"title":       "Verification Successed",
-			"message":     "Verification Successed",
-			"description": fmt.Sprintf("Now you can visit %s/map , before %s", hostaddress, public.ValidTime.Format("2006-01-02 15:04:05")),
-			"color":       "green",
-		})
+		userGroup = services.GROUP_USER
+	} else if passwd == config.Cfg.Security.AdminPasswd {
+		// 管理员密码验证成功
+		public.FailedCounter.Delete(ip)
+		userGroup = services.GROUP_ADMIN
 	} else {
+		// 验证失败
 		public.FailedCounter.Add(ip)
-		ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
-			"title":       "Verification Failed",
-			"message":     "Verification Failed",
-			"description": "Please try again",
-			"color":       "red",
-		})
+		ctx.Redirect(http.StatusFound, "/login?error=1")
+		return
 	}
 
+	jwtToken, err := services.GenerateJWT(userGroup)
+	if err != nil {
+		ctx.Redirect(http.StatusFound, "/login?error=1") // TODO: Detailed error msg
+		return
+	}
+
+	ctx.SetCookie(
+		services.JWT_COOKIE_NAME,
+		jwtToken,
+		config.Cfg.ValidMin*60,
+		"/",
+		"",
+		config.Cfg.NetWork.Https,
+		true,
+	)
+
+	if userGroup == services.GROUP_USER {
+		ctx.Redirect(http.StatusFound, "/pages/list")
+	} else {
+		ctx.Redirect(http.StatusFound, "/pages/list?admin=1")
+	}
 }

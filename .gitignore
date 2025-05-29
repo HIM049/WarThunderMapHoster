@@ -1,3 +1,4 @@
 *.blk
 *.exe
 .idea
+storage.json

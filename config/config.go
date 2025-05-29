@@ -9,10 +9,16 @@ import (
 var Cfg Config
 
 type Config struct {
-	Port int
+	NetWork
 	Service
 	Customize
 	Security
+	Secret
+}
+
+type NetWork struct {
+	Port  int
+	Https bool
 }
 
 type Service struct {
@@ -33,6 +39,10 @@ type Security struct {
 	AuthUA      bool
 }
 
+type Secret struct {
+	SecretKey string
+}
+
 func InitConfig() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
@@ -40,6 +50,11 @@ func InitConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Failed to read config file: %v", err)
+	}
+
+	network := NetWork{
+		Port:  viper.GetInt("server.Port"),
+		Https: viper.GetBool("server.Https"),
 	}
 
 	service := Service{
@@ -60,10 +75,15 @@ func InitConfig() {
 		AuthUA:      viper.GetBool("security.AuthUA"),
 	}
 
+	secret := Secret{
+		SecretKey: viper.GetString("secret.SecretKey"),
+	}
+
 	Cfg = Config{
-		Port:      viper.GetInt("server.Port"),
+		NetWork:   network,
 		Service:   service,
 		Customize: customize,
 		Security:  security,
+		Secret:    secret,
 	}
 }
