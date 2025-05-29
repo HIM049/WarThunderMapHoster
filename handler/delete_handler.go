@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"thunder_hoster/services"
@@ -24,21 +25,11 @@ func DeleteHandler(ctx *gin.Context) {
 
 	err := storage.Storage.Remove(mapName)
 	if err != nil {
-		ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
-			"title":       "Delete Failed",
-			"message":     "Failed to save file",
-			"description": "Error: " + err.Error(),
-			"color":       "red",
-		})
+		ctx.Redirect(http.StatusFound, fmt.Sprintf("/pages/list?admin=1&error=Failed+to+save+change:+%v", err))
 		return
 	}
 
 	storage.Storage.GenerateIndex()
 
-	ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
-		"title":       "Delete Successfully",
-		"message":     "Delete Successfully",
-		"description": "",
-		"color":       "green",
-	})
+	ctx.Redirect(http.StatusFound, "/pages/list?admin=1&success=Map+was+deleted")
 }

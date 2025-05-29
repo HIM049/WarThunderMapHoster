@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"path/filepath"
 	"thunder_hoster/config"
@@ -29,24 +30,14 @@ func UploadHandler(ctx *gin.Context) {
 
 	file, err := ctx.FormFile("file")
 	if err != nil {
-		ctx.HTML(http.StatusBadRequest, "message.tmpl", gin.H{
-			"title":       "Upload Failed",
-			"message":     "Upload Failed",
-			"description": "Error: " + err.Error(),
-			"color":       "red",
-		})
+		ctx.Redirect(http.StatusFound, fmt.Sprintf("/pages/list?admin=1&error=Failed+to+upload:+%v", err))
 		return
 	}
 
 	mapPath := filepath.Join(config.Cfg.Service.MapDir, mapName+".blk")
 	err = ctx.SaveUploadedFile(file, mapPath)
 	if err != nil {
-		ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
-			"title":       "Upload Failed",
-			"message":     "Failed to save file",
-			"description": "Error: " + err.Error(),
-			"color":       "red",
-		})
+		ctx.Redirect(http.StatusFound, fmt.Sprintf("/pages/list?admin=1&error=Failed+to+upload:+%v", err))
 		return
 	}
 
@@ -58,29 +49,15 @@ func UploadHandler(ctx *gin.Context) {
 	err = storage.Storage.Add(&newMap)
 	if err != nil {
 		if errors.Is(err, storage.ErrDuplicatedName) {
-			ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
-				"title":       "Upload Failed",
-				"message":     "Map name already exists",
-				"description": "Error: " + err.Error(),
-				"color":       "red",
-			})
+			ctx.Redirect(http.StatusFound, "/pages/list?admin=1&error=File+name+already+exists")
 		} else {
-			ctx.HTML(http.StatusInternalServerError, "message.tmpl", gin.H{
-				"title":       "Upload Failed",
-				"message":     "Failed to save storage file",
-				"description": "Error: " + err.Error(),
-				"color":       "red",
-			})
+			ctx.Redirect(http.StatusFound, fmt.Sprintf("/pages/list?admin=1&error=Failed+to+upload:+%v", err))
 		}
 		return
 	}
 
 	storage.Storage.GenerateIndex()
 
-	ctx.HTML(http.StatusOK, "message.tmpl", gin.H{
-		"title":       "Upload Successfully",
-		"message":     "Upload Successfully",
-		"description": "",
-		"color":       "green",
-	})
+	ctx.Redirect(http.StatusFound, "/pages/list?admin=1&success=Upload+successfully")
+
 }

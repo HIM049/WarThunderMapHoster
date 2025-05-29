@@ -14,11 +14,7 @@ func SendFile(ctx *gin.Context) {
 	fmt.Println(mapName)
 	mapInf, found := storage.Storage.ListMap[mapName]
 	if !found {
-		ctx.HTML(http.StatusNotFound, "message.tmpl", gin.H{
-			"title":   "File Not Found",
-			"message": "Cannot find specified file",
-			"color":   "red",
-		})
+		ctx.Redirect(http.StatusFound, "/pages/list?error=File+not+found")
 		return
 	}
 
