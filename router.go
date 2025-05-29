@@ -44,6 +44,7 @@ func RouterSetup() *gin.Engine {
 	}
 
 	apiGroup := router.Group("/api")
+	apiGroup.Use(middleware.LoginCheckMiddleware())
 	{
 		apiGroup.POST("/login", handler.AuthHandler)
 		apiGroup.POST("/upload", handler.UploadHandler)

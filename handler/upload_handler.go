@@ -17,12 +17,14 @@ func UploadHandler(ctx *gin.Context) {
 	group, exists := ctx.Get("group")
 	if !exists {
 		// 没有找到用户权限组标记
+		fmt.Println("upload redirect1")
 		ctx.Redirect(http.StatusFound, "/login")
 		return
 	}
 
 	if group != services.GROUP_ADMIN {
 		// 不是管理员用户
+		fmt.Println("upload redirect2")
 		ctx.Redirect(http.StatusFound, "/pages/list")
 		return
 	}
