@@ -144,7 +144,11 @@ func (m *MapStorage) GenerateIndex() {
 		return
 	}
 
+	newMap := make(map[string]*MapInformation)
+
 	for _, mapInfo := range m.Maps {
-		m.ListMap[mapInfo.MapName] = &mapInfo
+		newMap[mapInfo.MapName] = &mapInfo
 	}
+
+	m.ListMap = newMap
 }
