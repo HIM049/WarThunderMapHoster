@@ -22,8 +22,9 @@ type NetWork struct {
 }
 
 type Service struct {
-	MapDir   string
-	ValidMin int
+	MapDir      string
+	ValidMin    int
+	UpdateCheck bool
 }
 
 type Customize struct {
@@ -58,8 +59,9 @@ func InitConfig() {
 	}
 
 	service := Service{
-		MapDir:   viper.GetString("service.MapDir"),
-		ValidMin: viper.GetInt("service.ValidMin"),
+		MapDir:      viper.GetString("service.MapDir"),
+		ValidMin:    viper.GetInt("service.ValidMin"),
+		UpdateCheck: viper.GetBool("service.UpdateCheck"),
 	}
 
 	customize := Customize{

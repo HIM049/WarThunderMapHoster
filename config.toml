@@ -5,6 +5,7 @@ Https = false
 [service]
 MapDir = "./maps"
 ValidMin = 5
+UpdateCheck = true
 
 [customize]
 SideName = "Welcome"
