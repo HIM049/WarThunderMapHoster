@@ -47,7 +47,7 @@ func InitStorage() {
 
 func (m *MapStorage) Add(newMap *MapInformation) error {
 	_, found := m.ListMap[newMap.MapName]
-	if !config.Cfg.Service.UpdateCheck || found {
+	if config.Cfg.Service.UpdateCheck && found {
 		return ErrDuplicatedName
 	}
 	m.Maps = append(m.Maps, *newMap)
